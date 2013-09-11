@@ -49,13 +49,18 @@ namespace HttpAuthModule
                 }
             }
 
-            //var sw = System.Diagnostics.Stopwatch.StartNew();
-
             foreach (var s in _authStrategies)
+            {
+#if DEBUG
+                var sw = System.Diagnostics.Stopwatch.StartNew();
+                var result = s.Execute((HttpApplication)sender);
+                sw.Stop();
+                System.Diagnostics.Trace.WriteLine(string.Format("{0} ({1}) - {2}", s.GetType(), result, sw.Elapsed));
+                if (!result) break;
+#else
                 if (!s.Execute((HttpApplication)sender)) break;
-
-            //sw.Stop();
-            //System.Diagnostics.Trace.WriteLine(sw.Elapsed);
+#endif
+            }
         }
 
         public class Credential
