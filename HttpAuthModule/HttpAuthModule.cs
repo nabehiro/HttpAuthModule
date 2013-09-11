@@ -141,7 +141,7 @@ namespace HttpAuthModule
         public class DigestAuthStragegy : CredentialAuthStrategy
         {
             private static readonly TimeSpan _nonceValidDuration = new TimeSpan(2, 0, 0);
-            private static readonly string _nonceSalt = new Guid().ToString() + new Guid().ToString();
+            private static readonly string _nonceSalt = Guid.NewGuid().ToString() + Guid.NewGuid().ToString();
 
             private Dictionary<string, string> _validTokens;
 
