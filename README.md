@@ -1,5 +1,5 @@
-# Http Authentication Module
-This is Simple Http Authentication Module for ASP.NET (MVC).
+# Http Auth Module
+This is Simple Http Authentication HttpModule for ASP.NET (MVC).
 - Basic Authentication
 - Digest Authentication 
 - Restrict IP Address (ip4 or ip6)
