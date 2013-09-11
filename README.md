@@ -4,7 +4,10 @@ This is Simple Http Authentication Module for ASP.NET (MVC).
 - Digest Authentication 
 - Restrict IP Address (ip4 or ip6)
 
-```XML:Web.config
+# Configuration
+modify Web.config file.
+
+```XML
 <appSettings>
 	<!-- HttpAuth -->
 	<!--
@@ -26,5 +29,10 @@ This is Simple Http Authentication Module for ASP.NET (MVC).
 	-->
 	<add key="HttpAuth.RestrictIPAddresses" value="127.0.0.1;182.249.0.0/16;182.248.112.128/26;::1" />
 </appSettings>
+<system.webServer>
+    <modules>
+      <add type="HttpAuthModule.HttpAuthModule" name="HttpAuthModule"/>
+    </modules>
+  </system.webServer>
 ```
 
