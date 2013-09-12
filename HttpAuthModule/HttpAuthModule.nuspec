@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>HttpAuthModule</id>
+    <version>$version$</version>
+    <title>Http Auth Module</title>
+    <authors>nabehiro</authors>
+    <owners>nabehiro</owners>
+    <!-- <licenseUrl></licenseUrl> -->
+    <projectUrl>http://github.com/nabehiro/HttpAuthModule</projectUrl>
+    <!-- <iconUrl></iconUrl> -->
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Simple Http Basic, Digest Authentication Module with IP Restriction</description>
+    <releaseNotes></releaseNotes>
+    <copyright>Copyright 2013</copyright>
+    <tags>Http Authentication Basic Digest Restrict IP</tags>
+  </metadata>
+  <files>
+    <file src="Web.config.transform" target="content"/>
+  </files>
+</package>
