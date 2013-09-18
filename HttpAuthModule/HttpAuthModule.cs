@@ -233,12 +233,12 @@ namespace HttpAuthModule
 
         public class RestictIPStragegy : IAuthStrategy
         {
-            private IPAddressRangeChecker[] _checkers;
+            private IPAddressRange[] _checkers;
 
             public RestictIPStragegy(string ipAddresses)
             {
                 _checkers = ipAddresses.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries)
-                    .Select(s => new IPAddressRangeChecker(s))
+                    .Select(s => new IPAddressRange(s))
                     .ToArray();
             }
 
@@ -264,7 +264,7 @@ namespace HttpAuthModule
             }
         }
 
-        public class IPAddressRangeChecker
+        public class IPAddressRange
         {
             private AddressFamily _addressFamily;
             private byte[] _netowrkAddressBytes;
@@ -277,7 +277,7 @@ namespace HttpAuthModule
             /// "2001:0db8:bd05:01d2:288a:1fc0:0001:0000/16",
             /// "::1" (equals to "::1/128")
             /// </param>
-            public IPAddressRangeChecker(string ipRangeString)
+            public IPAddressRange(string ipRangeString)
             {
                 if (string.IsNullOrEmpty(ipRangeString))
                     throw new InvalidOperationException("IP Address is null or empty.");
