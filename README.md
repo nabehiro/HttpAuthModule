@@ -5,11 +5,14 @@ This is Simple Http Authentication HttpModule for ASP.NET (MVC).
 - Restrict IP Address (ip4 or ip6)
 
 # Quick start
-Install Nuget package.
+Get Nuget package.
 
 ```
 PM> Install-Package HttpAuthModule
 ``` 
+
+After Getting, configure Web.config file.
+It's all you do for using HttpAuthModule.
 
 # Configuration
 modify Web.config file.
