@@ -6,6 +6,7 @@ This is Simple Http Authentication HttpModule for ASP.NET (MVC).
 
 # Quick start
 Get Nuget package.
+https://www.nuget.org/packages/HttpAuthModule/
 
 ```
 PM> Install-Package HttpAuthModule
