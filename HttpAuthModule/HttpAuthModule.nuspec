@@ -10,10 +10,16 @@
     <projectUrl>http://github.com/nabehiro/HttpAuthModule</projectUrl>
     <!-- <iconUrl></iconUrl> -->
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>Simple Http Basic, Digest Authentication Module with IP Restriction</description>
+    <description>
+      Simple Http Basic, Digest Authentication Module with IP Restriction.
+      Basic or Digest Authentication don't touch HttpContext.Current.User.
+      Target IP Address Family is IPv4 and IPv6.
+
+      If you find bugs or have reauests for improvement, contact me. http://github.com/nabehiro/HttpAuthModule
+    </description>
     <releaseNotes></releaseNotes>
     <copyright>Copyright 2013</copyright>
-    <tags>Http Authentication Basic Digest Restrict IP</tags>
+    <tags>Http Authentication Basic Digest Restrict IP IPv6</tags>
   </metadata>
   <files>
     <file src="Web.config.transform" target="content"/>

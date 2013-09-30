@@ -3,6 +3,7 @@ This is Simple Http Authentication HttpModule for ASP.NET (MVC).
 - Basic Authentication
 - Digest Authentication 
 - Restrict IP Address (ip4 or ip6)
+- Basic or Digest Authentication don't tounch HttpContext.Current.User.
 
 # Quick start
 Get Nuget package.
