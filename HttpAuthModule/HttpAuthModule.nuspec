@@ -10,10 +10,15 @@
     <projectUrl>http://github.com/nabehiro/HttpAuthModule</projectUrl>
     <!-- <iconUrl></iconUrl> -->
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <summary>Simple Http Basic, Digest Authentication Module with IP Restriction.</summary>
     <description>
       Simple Http Basic, Digest Authentication Module with IP Restriction.
-      Basic or Digest Authentication don't touch HttpContext.Current.User.
-      Target IP Address Family is IPv4 and IPv6.
+      [Features]
+      - Standard basic authentication.
+      - Digest authentication implementation is simple algorithm: nonce value has expiration.
+      - Basic or Digest Authentication don't touch HttpContext.Current.User.
+      - Target IP Address Family is IPv4 and IPv6.
+
 
       If you find bugs or have reauests for improvement, contact me. http://github.com/nabehiro/HttpAuthModule
     </description>
