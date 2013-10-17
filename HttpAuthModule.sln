@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HttpAuthModule", "HttpAuthModule\HttpAuthModule.csproj", "{1A44DED2-08B4-48DC-972F-A0CF24AD59A4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HttpAuthModule.SampleWeb", "HttpAuthModule.SampleWeb\HttpAuthModule.SampleWeb.csproj", "{BC5ECB90-61AD-4711-9711-1BF7635415C3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HttpAuthModule.SampleMvc2", "HttpAuthModule.SampleMvc2\HttpAuthModule.SampleMvc2.csproj", "{43E5229D-6E32-49FB-834D-7FFD7818F821}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HttpAuthModule.SampleWeb2", "HttpAuthModule.SampleWeb2\HttpAuthModule.SampleWeb2.csproj", "{32FF8584-6AF9-470A-B96B-F460C205E911}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,10 +17,14 @@ Global
 		{1A44DED2-08B4-48DC-972F-A0CF24AD59A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1A44DED2-08B4-48DC-972F-A0CF24AD59A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1A44DED2-08B4-48DC-972F-A0CF24AD59A4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{BC5ECB90-61AD-4711-9711-1BF7635415C3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BC5ECB90-61AD-4711-9711-1BF7635415C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BC5ECB90-61AD-4711-9711-1BF7635415C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BC5ECB90-61AD-4711-9711-1BF7635415C3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{43E5229D-6E32-49FB-834D-7FFD7818F821}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{43E5229D-6E32-49FB-834D-7FFD7818F821}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{43E5229D-6E32-49FB-834D-7FFD7818F821}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{43E5229D-6E32-49FB-834D-7FFD7818F821}.Release|Any CPU.Build.0 = Release|Any CPU
+		{32FF8584-6AF9-470A-B96B-F460C205E911}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{32FF8584-6AF9-470A-B96B-F460C205E911}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{32FF8584-6AF9-470A-B96B-F460C205E911}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{32FF8584-6AF9-470A-B96B-F460C205E911}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

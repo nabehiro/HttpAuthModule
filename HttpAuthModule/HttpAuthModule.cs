@@ -4,10 +4,10 @@ using System.Configuration;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
+using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
-using System.Web.Security;
 
 namespace HttpAuthModule
 {
@@ -47,7 +47,16 @@ namespace HttpAuthModule
 
                         var ignorePathRegex = ConfigurationManager.AppSettings["HttpAuth.IgnorePathRegex"];
                         if (!string.IsNullOrEmpty(ignorePathRegex))
-                            _ignorePathRegex = new Regex(ignorePathRegex, RegexOptions.Compiled | RegexOptions.IgnoreCase);
+                        {
+                            try
+                            {
+                                _ignorePathRegex = new Regex(ignorePathRegex, RegexOptions.Compiled | RegexOptions.IgnoreCase);
+                            }
+                            catch (Exception ex)
+                            {
+                                throw new InvalidOperationException("AppSettings[HttpAuth.IgnorePathRegex] is invalid.", ex);
+                            }
+                        }
 
                         _initialized = true;
                     }
@@ -98,6 +107,9 @@ namespace HttpAuthModule
             public CredentialAuthStrategy()
             {
                 Realm = ConfigurationManager.AppSettings["HttpAuth.Realm"];
+                if (string.IsNullOrEmpty(Realm))
+                    Realm = "SecureZone";
+
                 Credentials = (ConfigurationManager.AppSettings["HttpAuth.Credentials"] ?? "")
                     .Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries)
                     .Select(str =>
@@ -109,6 +121,16 @@ namespace HttpAuthModule
             }
 
             public abstract bool Execute(HttpApplication app);
+
+            protected void Respond401(HttpApplication app, string wwwAuthenticate)
+            {
+                app.Context.Response.Clear();
+                app.Context.Response.Status = "401 Unauthorized";
+                app.Context.Response.StatusCode = 401;
+                app.Context.Response.AddHeader("WWW-Authenticate", wwwAuthenticate);
+                app.Context.Response.SuppressFormsAuthenticationRedirect = true;
+                app.Context.Response.End();
+            }
         }
 
         #endregion
@@ -132,11 +154,7 @@ namespace HttpAuthModule
                 var authVal = app.Context.Request.Headers["Authorization"];
                 if (!_validAuthVals.Contains(authVal))
                 {
-                    app.Context.Response.Clear();
-                    app.Context.Response.Status = "401 Unauthorized";
-                    app.Context.Response.StatusCode = 401;
-                    app.Context.Response.AddHeader("WWW-Authenticate", "Basic Realm=" + Realm);
-                    app.Context.Response.End();
+                    Respond401(app, "Basic Realm=" + Realm);
                     return false;
                 }
                 return true;
@@ -150,16 +168,27 @@ namespace HttpAuthModule
 
         public class DigestAuthStragegy : CredentialAuthStrategy
         {
-            private static readonly TimeSpan _nonceValidDuration = 
-                new TimeSpan(0, int.Parse(ConfigurationManager.AppSettings["HttpAuth.DigestNonceValidDuration"]), 0);
-            private static readonly string _nonceSalt = Guid.NewGuid().ToString() + Guid.NewGuid().ToString();
+            private TimeSpan _nonceValidDuration;
+            private string _nonceSalt;
 
             private Dictionary<string, string> _validTokens;
 
             public DigestAuthStragegy() : base()
             {
+                var nonceValidDuration = ConfigurationManager.AppSettings["HttpAuth.DigestNonceValidDuration"];
+                if (string.IsNullOrEmpty(nonceValidDuration))
+                    nonceValidDuration = "120";
+                var intNonceValidDuration = 0;
+                if (!int.TryParse(nonceValidDuration, out intNonceValidDuration))
+                    throw new InvalidOperationException("AppSettings[HttpAuth.DigestNonceValidDuration] is invalid.");
+                _nonceValidDuration = new TimeSpan(0, intNonceValidDuration, 0);
+
+                _nonceSalt = ConfigurationManager.AppSettings["HttpAuth.DigestNonceSalt"];
+                if (string.IsNullOrEmpty(_nonceSalt))
+                    throw new InvalidOperationException("AppSettings[HttpAuth.DigestNonceSalt] is required.");
+
                 _validTokens = Credentials
-                    .ToDictionary(c => c.Name, c => MD5(string.Format("{0}:{1}:{2}", c.Name, Realm, c.Password)));
+                    .ToDictionary(c => c.Name, c => GetMD5(string.Format("{0}:{1}:{2}", c.Name, Realm, c.Password)));
             }
 
             public override bool Execute(HttpApplication app)
@@ -187,9 +216,9 @@ namespace HttpAuthModule
                 var nc = vals.ContainsKey("nc") ? vals["nc"] : null;
                 var response = vals.ContainsKey("response") ? vals["response"] : null;
                 var a1 = _validTokens[username];
-                var a2 = MD5(app.Context.Request.HttpMethod + ":" + uri);
+                var a2 = GetMD5(app.Context.Request.HttpMethod + ":" + uri);
 
-                if (response != MD5(string.Format("{0}:{1}:{2}:{3}:{4}:{5}", a1, nonce, nc, cnonce, qop, a2)))
+                if (response != GetMD5(string.Format("{0}:{1}:{2}:{3}:{4}:{5}", a1, nonce, nc, cnonce, qop, a2)))
                     return RespondError(app);
 
                 return true;
@@ -197,19 +226,15 @@ namespace HttpAuthModule
 
             private bool RespondError(HttpApplication app)
             {
-                app.Context.Response.Clear();
-                app.Context.Response.Status = "401 Unauthorized";
-                app.Context.Response.StatusCode = 401;
-                app.Context.Response.AddHeader("WWW-Authenticate",
-                    string.Format(@"Digest realm=""{0}"", nonce=""{1}"", algorithm=MD5, qop=""auth""", Realm, CreateNonce(DateTime.UtcNow)));
-                app.Context.Response.End();
+                Respond401(app, string.Format(@"Digest realm=""{0}"", nonce=""{1}"", algorithm=MD5, qop=""auth""",
+                    Realm, CreateNonce(DateTime.UtcNow)));
                 return false;
             }
 
             private string CreateNonce(DateTime dt)
             {
                 string hash = string.Format("{0}{1}",_nonceSalt, dt.Ticks);
-                for(int i = 0; i < 3; i++) hash = SHA1(hash);
+                for(int i = 0; i < 3; i++) hash = GetSHA1(hash);
                 return string.Format("{0}-{1}", dt.Ticks, hash);
             }
             private bool ValidateNonce(string nonce)
@@ -228,13 +253,16 @@ namespace HttpAuthModule
                 return dt + _nonceValidDuration >= DateTime.UtcNow && nonce == CreateNonce(dt);
             }
 
-            private static string MD5(string s)
+            private static readonly MD5 _md5 = MD5.Create();
+            private static string GetMD5(string s)
             {
-                return FormsAuthentication.HashPasswordForStoringInConfigFile(s, "MD5").ToLower();
+                return string.Concat(_md5.ComputeHash(Encoding.UTF8.GetBytes(s)).Select(d => d.ToString("x2"))).ToLower();
             }
-            private static string SHA1(string s)
+
+            private static readonly SHA1 _sha1 = SHA1.Create();
+            private static string GetSHA1(string s)
             {
-                return FormsAuthentication.HashPasswordForStoringInConfigFile(s, "SHA1").ToLower();
+                return string.Concat(_sha1.ComputeHash(Encoding.UTF8.GetBytes(s)).Select(d => d.ToString("x2"))).ToLower();
             }
         }
 

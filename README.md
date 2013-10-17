@@ -21,34 +21,33 @@ modify Web.config file.
 
 ```XML
 <appSettings>
-	<!-- HttpAuth -->
 	<!--
-	  Http Authentication Mode.
-	  - Basic: Basic authentication
-	  - Digest: Digest authentication
-	  - None: No authentication -->
-	<add key="HttpAuth" value="Digest" />
-	<add key="HttpAuth.Realm" value="SecureZone" />
-	<!-- user1:pass1;user2:pass2;... -->
-	<add key="HttpAuth.Credentials" value="hoge:hogepass;foo:foopass;"/>
-	<!-- Digest Auth Nonce Valid Duration.(Minutes) -->
-	<add key="HttpAuth.DigestNonceValidDuration" value="120" />
-	<!--
-	  When HttpAuth.RestrictIPAddresses is set, specified IPs are only allowed: otherwize All IPs are allowed.
-	  value is joined IP Range Combination as following.
-	  - 10.23.0.0/24
-	  - 127.0.0.1 (equals to 127.0.0.1/32)
-	  - 2001:0db8:bd05:01d2:288a:1fc0:0001:0000/16
-	  - ::1 (equals to ::1/128)
-	  
-	  e.g) 127.0.0.1;182.249.0.0/16;182.248.112.128/26;::1
-	-->
-	<add key="HttpAuth.RestrictIPAddresses" value="127.0.0.1;::1" />
-	<!-- 
-      When HttpAuth.IgnorePathRegex is set,
-      Request that has Request.RawUrl macthed regex is not resticted by http authentication and IP restriction. 
+      [required] Http Authentication Mode.
+      - Basic: Basic authentication
+      - Digest: Digest authentication
+      - None: No authentication -->
+    <add key="HttpAuth" value="Basic"/>
+    <!-- [optional] default is "SecureZone" -->
+    <add key="HttpAuth.Realm" value=""/>
+    <!-- [required if http auth on] user1:pass1;user2:pass2;... -->
+    <add key="HttpAuth.Credentials" value="hoge:hogepass;foo:foopass;"/>
+    <!-- [optional] Digest Auth Nonce Valid Duration Minutes. default is 120 -->
+    <add key="HttpAuth.DigestNonceValidDuration" value="120"/>
+    <!-- [required if digest auth on] Digest Auth Nonce Salt -->
+    <add key="HttpAuth.DigestNonceSalt" value="uht9987bbbSAX" />
+    <!--
+      [optional] If set, specified IPs are only allowed: otherwize All IPs are allowed.
+      value is joined IP Range Combination as following.
+      - 10.23.0.0/24
+      - 127.0.0.1 (equals to 127.0.0.1/32)
+      - 2001:0db8:bd05:01d2:288a:1fc0:0001:0000/16
+      - ::1 (equals to ::1/128)
+      
+      e.g) 127.0.0.1;182.249.0.0/16;182.248.112.128/26;::1
     -->
-    <add key="HttpAuth.IgnorePathRegex" value="^/Ignore\.aspx$" />
+    <add key="HttpAuth.RestrictIPAddresses" value="127.0.0.1;::1"/>
+    <!-- [optional] If set, specified pattern url request skip http auth and IP Restriction. -->
+    <add key="HttpAuth.IgnorePathRegex" value="^/Home/Ignore$|^/Ignore\.aspx$"/>
 </appSettings>
 <system.webServer>
     <modules>
