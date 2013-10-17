@@ -16,6 +16,7 @@ namespace HttpAuthModule
         private static object _lock = new object();
         private static bool _initialized = false;
         private static List<IAuthStrategy> _authStrategies = new List<IAuthStrategy>();
+        private static Regex _ignorePathRegex = null;
 
         public void Dispose() { }
 
@@ -44,10 +45,19 @@ namespace HttpAuthModule
                         if (!string.IsNullOrEmpty(restrictIPAddresses))
                             _authStrategies.Add(new RestictIPStragegy(restrictIPAddresses));
 
+                        var ignorePathRegex = ConfigurationManager.AppSettings["HttpAuth.IgnorePathRegex"];
+                        if (!string.IsNullOrEmpty(ignorePathRegex))
+                            _ignorePathRegex = new Regex(ignorePathRegex, RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
                         _initialized = true;
                     }
                 }
             }
+
+            var app = (HttpApplication)sender;
+
+            if (_ignorePathRegex != null && _ignorePathRegex.IsMatch(app.Context.Request.RawUrl))
+                return;
 
             foreach (var s in _authStrategies)
             {
@@ -58,7 +68,7 @@ namespace HttpAuthModule
                 System.Diagnostics.Trace.WriteLine(string.Format("{0} ({1}) - {2}", s.GetType(), result, sw.Elapsed));
                 if (!result) break;
 #else
-                if (!s.Execute((HttpApplication)sender)) break;
+                if (!s.Execute(app)) break;
 #endif
             }
         }

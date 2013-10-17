@@ -18,7 +18,7 @@
       - Digest authentication implementation is simple algorithm: nonce value has expiration.
       - Basic or Digest Authentication don't touch HttpContext.Current.User.
       - Target IP Address Family is IPv4 and IPv6.
-
+      - Ignore Path Regex Setting.
 
       If you find bugs or have reauests for improvement, contact me. http://github.com/nabehiro/HttpAuthModule
     </description>
