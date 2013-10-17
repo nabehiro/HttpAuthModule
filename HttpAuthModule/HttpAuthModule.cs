@@ -253,16 +253,16 @@ namespace HttpAuthModule
                 return dt + _nonceValidDuration >= DateTime.UtcNow && nonce == CreateNonce(dt);
             }
 
-            private static readonly MD5 _md5 = MD5.Create();
             private static string GetMD5(string s)
             {
-                return string.Concat(_md5.ComputeHash(Encoding.UTF8.GetBytes(s)).Select(d => d.ToString("x2"))).ToLower();
+                var md5 = MD5.Create();
+                return string.Concat(md5.ComputeHash(Encoding.UTF8.GetBytes(s)).Select(d => d.ToString("x2"))).ToLower();
             }
 
-            private static readonly SHA1 _sha1 = SHA1.Create();
             private static string GetSHA1(string s)
             {
-                return string.Concat(_sha1.ComputeHash(Encoding.UTF8.GetBytes(s)).Select(d => d.ToString("x2"))).ToLower();
+                var sha1 = SHA1.Create();
+                return string.Concat(sha1.ComputeHash(Encoding.UTF8.GetBytes(s)).Select(d => d.ToString("x2"))).ToLower();
             }
         }
 
