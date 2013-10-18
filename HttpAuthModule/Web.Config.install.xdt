@@ -1,9 +1,25 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<configuration>
-  <configSections>
-    <section name="httpAuthModule" type="System.Configuration.NameValueFileSectionHandler" />
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<configuration xmlns:xdt="http://schemas.microsoft.com/XML-Document-Transform">
+
+  <configSections xdt:Transform="InsertBefore(/configuration/*[1])" />
+  <configSections xdt:Locator="XPath(/configuration/configSections[last()])">
+    <section name="httpAuthModule" type="System.Configuration.NameValueFileSectionHandler"
+      xdt:Transform="InsertIfMissing" xdt:Locator="Match(name)" />
   </configSections>
-  <httpAuthModule>
+  <configSections xdt:Transform="RemoveAll" xdt:Locator="Condition(count(*)=0)" />
+
+  <system.webServer xdt:Transform="InsertIfMissing" />
+  <system.webServer>
+    <modules xdt:Transform="InsertIfMissing" />
+  </system.webServer>
+  <system.webServer>
+    <modules>
+      <add type="HttpAuthModule.HttpAuthModule" name="HttpAuthModule"
+        xdt:Transform="InsertIfMissing" xdt:Locator="Match(name)" />
+    </modules>
+  </system.webServer>
+  
+  <httpAuthModule xdt:Transform="InsertIfMissing">
     <!-- If HttpAuthModule has problems, please contact me, https://github.com/nabehiro/HttpAuthModule -->
     <!--
       [required] Http Authentication Mode.
@@ -28,17 +44,8 @@
       - ::1 (equals to ::1/128)
       
       e.g) 127.0.0.1;182.249.0.0/16;182.248.112.128/26;::1 -->
-    <add key="RestrictIPAddresses" value="127.0.0.1"/>
+    <add key="RestrictIPAddresses" value="127.0.0.1;::1"/>
     <!-- [optional] If set, specified pattern url request skip http auth and IP Restriction. -->
-    <add key="IgnorePathRegex" value="^/Home/Ignore$|^/Ignore\.aspx$"/>
+    <add key="IgnorePathRegex" value="^/Home/Ignore$|^/Ignore\.aspx$|^/Content/"/>
   </httpAuthModule>
-  <system.web>
-    <compilation debug="true" targetFramework="4.5" />
-    <httpRuntime targetFramework="4.5" />
-  </system.web>
-  <system.webServer>
-    <modules>
-      <add type="HttpAuthModule.HttpAuthModule" name="HttpAuthModule"/>
-    </modules>
-  </system.webServer>
 </configuration>

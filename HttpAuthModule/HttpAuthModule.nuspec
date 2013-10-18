@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<package >
+<package>
   <metadata>
     <id>HttpAuthModule</id>
     <version>$version$</version>
@@ -24,9 +24,10 @@
     </description>
     <releaseNotes></releaseNotes>
     <copyright>Copyright 2013</copyright>
-    <tags>Http Authentication Basic Digest Restrict IP IPv6</tags>
+    <tags>Http Authentication Basic Digest Restrict IP Sitecore</tags>
   </metadata>
   <files>
-    <file src="Web.config.transform" target="content"/>
+    <file src="Web.Config.install.xdt" target="content"/>
+    <file src="Web.Config.uninstall.xdt" target="content"/>
   </files>
 </package>

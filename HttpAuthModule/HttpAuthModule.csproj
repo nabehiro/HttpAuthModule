@@ -44,8 +44,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BasicAuthStragegy.cs" />
+    <Compile Include="Config.cs" />
+    <Compile Include="Credential.cs" />
+    <Compile Include="CredentialAuthStrategy.cs" />
+    <Compile Include="DigestAuthStragegy.cs" />
     <Compile Include="HttpAuthModule.cs" />
+    <Compile Include="IAuthStrategy.cs" />
+    <Compile Include="IPAddressRange.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RestictIPStragegy.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="HttpAuthModule.nuspec" />
+    <None Include="Web.Config.install.xdt" />
+    <None Include="Web.Config.uninstall.xdt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
