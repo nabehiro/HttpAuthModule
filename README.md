@@ -17,7 +17,7 @@ After Getting, configure Web.config file.
 It's all you do for using HttpAuthModule.
 
 # Configuration
-modify Web.config file.
+Modify Web.config file.
 
 ```XML
 <configuration>
@@ -62,3 +62,11 @@ modify Web.config file.
 </configuration>
 ```
 
+
+If you apply only http requests for ASP.NET Resource(default.aspx /controller/action, but image.gif, index.html), change "modules -> add" element. 
+```XML
+  <modules>
+    <!-- add preCondition="managedHandler" -->
+    <add type="HttpAuthModule.HttpAuthModule" name="HttpAuthModule" preCondition="managedHandler" />
+  </modules> 
+```

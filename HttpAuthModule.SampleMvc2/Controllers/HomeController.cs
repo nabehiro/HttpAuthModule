@@ -8,9 +8,9 @@ namespace HttpAuthModule.SampleMvc.Controllers
 {
     public class HomeController : Controller
     {
-        public string Index()
+        public ActionResult Index()
         {
-            return "Home-Index";
+            return View();
         }
 
         public string Ignore()

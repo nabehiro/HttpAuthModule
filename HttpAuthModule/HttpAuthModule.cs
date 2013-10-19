@@ -69,7 +69,7 @@ namespace HttpAuthModule
                 var sw = System.Diagnostics.Stopwatch.StartNew();
                 var result = s.Execute((HttpApplication)sender);
                 sw.Stop();
-                System.Diagnostics.Trace.WriteLine(string.Format("{0} ({1}) - {2}", s.GetType(), result, sw.Elapsed));
+                System.Diagnostics.Trace.WriteLine(string.Format("{0} ({1}) - {2} | {3}", s.GetType(), result, sw.Elapsed, app.Request.RawUrl));
                 if (!result) break;
 #else
                 if (!s.Execute(app)) break;

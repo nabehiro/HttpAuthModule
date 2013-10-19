@@ -57,7 +57,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="HttpAuthModule.nuspec" />
-    <None Include="Web.Config.install.xdt" />
+    <None Include="Web.Config.install.xdt">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Web.Config.uninstall.xdt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
