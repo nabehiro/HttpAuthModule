@@ -5,6 +5,8 @@ This is Simple Http Authentication HttpModule for ASP.NET (MVC).
 - Restrict IP Address (ip4 or ip6)
 - Basic or Digest Authentication don't tounch HttpContext.Current.User.
 
+** Http Auth Module targets the .NET Framework 4.5 **
+
 # Quick start
 Get Nuget package.
 https://www.nuget.org/packages/HttpAuthModule/
