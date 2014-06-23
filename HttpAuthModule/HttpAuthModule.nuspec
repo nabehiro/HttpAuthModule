@@ -20,7 +20,7 @@
       - Target IP Address Family is IPv4 and IPv6.
       - Ignore Path Regex Setting.
 
-      If you find bugs or have reauests for improvement, contact me. http://github.com/nabehiro/HttpAuthModule
+      If you find bugs or have requests for improvement, contact me. http://github.com/nabehiro/HttpAuthModule
     </description>
     <releaseNotes></releaseNotes>
     <copyright>Copyright 2013</copyright>
