@@ -73,6 +73,16 @@ If you apply only http requests for ASP.NET Resource(default.aspx /controller/ac
   </modules> 
 ```
 
+# Disable HttpAuthModule by AppSettings
+if you add HttpAuthModuleEnabled=false to appSettings, HttpAUthModule doesn't run.
+```XML
+  <appSettings>
+    <add key="HttpAuthModuleEnabled" value="false" />   
+  </appSettings>
+```
+
+
+
 # Usage for PHP
 1. create bin dir(ectory) into root dir.
 2. put HttpAuthModule.dll into bin dir.
