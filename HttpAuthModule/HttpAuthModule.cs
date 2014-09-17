@@ -10,6 +10,7 @@ namespace HttpAuthModule
     {
         private static object _lock = new object();
         private static bool _initialized = false;
+        private static bool _enabled = true;
         private static List<IAuthStrategy> _authStrategies = new List<IAuthStrategy>();
         private static Regex _ignorePathRegex = null;
 
@@ -18,7 +19,8 @@ namespace HttpAuthModule
         public void Init(HttpApplication context)
         {
             InitializeStatic();
-            context.AuthenticateRequest += new EventHandler(context_AuthenticateRequest);
+            if (_enabled)
+                context.AuthenticateRequest += new EventHandler(context_AuthenticateRequest);
         }
 
         private void InitializeStatic()
@@ -29,6 +31,15 @@ namespace HttpAuthModule
                 {
                     if (!_initialized)
                     {
+                        try
+                        {
+                            _enabled = bool.Parse(ConfigurationManager.AppSettings["HttpAuthModuleEnabled"] ?? "true");
+                        }
+                        catch(Exception ex)
+                        {
+                            throw new InvalidOperationException("AppSettings[HttpAuthModuleEnabled] is invalid.", ex);
+                        }
+
                         var restrictIPAddresses = Config.Get("RestrictIPAddresses");
                         if (!string.IsNullOrEmpty(restrictIPAddresses))
                             _authStrategies.Add(new RestictIPStragegy(restrictIPAddresses));
