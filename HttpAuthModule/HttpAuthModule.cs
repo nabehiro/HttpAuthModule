@@ -17,10 +17,11 @@ namespace HttpAuthModule
 
         public void Init(HttpApplication context)
         {
+            InitializeStatic();
             context.AuthenticateRequest += new EventHandler(context_AuthenticateRequest);
         }
 
-        private void context_AuthenticateRequest(object sender, EventArgs e)
+        private void InitializeStatic()
         {
             if (!_initialized)
             {
@@ -57,7 +58,10 @@ namespace HttpAuthModule
                     }
                 }
             }
+        }
 
+        private void context_AuthenticateRequest(object sender, EventArgs e)
+        {
             var app = (HttpApplication)sender;
 
             if (_ignorePathRegex != null && _ignorePathRegex.IsMatch(app.Context.Request.RawUrl))
