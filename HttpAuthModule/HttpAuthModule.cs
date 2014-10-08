@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web;
 
@@ -13,6 +14,7 @@ namespace HttpAuthModule
         private static bool _enabled = true;
         private static List<IAuthStrategy> _authStrategies = new List<IAuthStrategy>();
         private static Regex _ignorePathRegex = null;
+        private static IPAddressRange[] _ignoreIPAddresses = null;
 
         public void Dispose() { }
 
@@ -65,6 +67,12 @@ namespace HttpAuthModule
                             }
                         }
 
+                        var ignoreIPAddresses = Config.Get("ignoreIPAddresses");
+                        if (!string.IsNullOrEmpty(ignoreIPAddresses))
+                            _ignoreIPAddresses = ignoreIPAddresses.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries)
+                                .Select(s => new IPAddressRange(s))
+                                .ToArray();
+
                         _initialized = true;
                     }
                 }
@@ -74,6 +82,13 @@ namespace HttpAuthModule
         private void context_AuthenticateRequest(object sender, EventArgs e)
         {
             var app = (HttpApplication)sender;
+
+            if (_ignoreIPAddresses != null)
+            {
+                var userHostAddress = app.Context.Request.UserHostAddress;
+                if (!string.IsNullOrEmpty(userHostAddress) &&  _ignoreIPAddresses.Any(a => a.IsInRange(userHostAddress)))
+                    return;
+            }
 
             if (_ignorePathRegex != null && _ignorePathRegex.IsMatch(app.Context.Request.RawUrl))
                 return;

@@ -4,6 +4,8 @@ This is Simple Http Authentication HttpModule for ASP.NET (MVC).
 - Digest Authentication 
 - Restrict IP Address (ip4 or ip6)
 - Basic or Digest Authentication don't tounch HttpContext.Current.User.
+- Ignore Path Regex.(specified path skip authentication)
+- Ignore IP Address.(specified IP skip authentication)
 
 ** Http Auth Module targets the .NET Framework 4.5 **
 
@@ -54,6 +56,11 @@ Modify Web.config file.
     <add key="RestrictIPAddresses" value="127.0.0.1;::1"/>
     <!-- [optional] If set, specified pattern url request skip http auth and IP Restriction. -->
     <add key="IgnorePathRegex" value="^/Home/Ignore$|^/Ignore\.aspx$"/>
+    <!-- 
+      [optional] If set,specified IPs requests skip http auth Restriction.
+      value format is same as 'RestrictIPAddresses'
+    -->
+    <add key="IgnoreIPAddresses" value="127.0.0.1;::1"/>
   </httpAuthModule>
 
   <system.webServer>

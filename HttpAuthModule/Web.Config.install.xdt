@@ -47,5 +47,10 @@
     <!-- <add key="RestrictIPAddresses" value="127.0.0.1;::1"/> -->
     <!-- [optional] If set, specified pattern url requests are skipped by http auth and IP Restriction. -->
     <!-- <add key="IgnorePathRegex" value="^/Home/Ignore$|^/Ignore\.aspx$|^/Content/"/> -->
+    <!-- 
+      [optional] If set,specified IPs requests skip http auth Restriction.
+      value format is same as 'RestrictIPAddresses'
+    -->
+    <!--<add key="IgnoreIPAddresses" value="127.0.0.1;::1"/>-->
   </httpAuthModule>
 </configuration>
