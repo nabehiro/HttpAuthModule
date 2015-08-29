@@ -12,7 +12,7 @@ namespace HttpAuthModule
 
         public CredentialAuthStrategy()
         {
-            Realm = Config.Get("HttpAuth.Realm", "SecureZone");
+            Realm = Config.Get("Realm", "SecureZone");
 
             Credentials = Config.Get("Credentials")
                 .Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries)
