@@ -10,7 +10,7 @@ namespace HttpAuthModule
 
         public static string Get(string key, string nullVal = "")
         {
-            var val = _section[key];
+            var val = ConfigurationManager.AppSettings["HttpAuthModule." + key] ?? _section[key];
             return string.IsNullOrEmpty(val) ? nullVal : val;
         }
     }

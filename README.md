@@ -1,7 +1,7 @@
 # Http Auth Module
 This is Simple Http Authentication HttpModule for ASP.NET (MVC).
 - Basic Authentication
-- Digest Authentication 
+- Digest Authentication
 - Restrict IP Address (ip4 or ip6)
 - Basic or Digest Authentication don't tounch HttpContext.Current.User.
 - Ignore Path Regex.(specified path skip authentication)
@@ -15,13 +15,18 @@ https://www.nuget.org/packages/HttpAuthModule/
 
 ```
 PM> Install-Package HttpAuthModule
-``` 
+```
 
 After Getting, configure Web.config file.
 It's all you do for using HttpAuthModule.
 
 # Configuration
-Modify Web.config file.
+Modify Web.config file.  
+
+Configure on httpAuthModule section or appSettings section.  
+** appSetting section is prior to httpAuthModule section.  **
+
+## configure on httpAuthModule section
 
 ```XML
 <configuration>
@@ -51,12 +56,12 @@ Modify Web.config file.
       - 127.0.0.1 (equals to 127.0.0.1/32)
       - 2001:0db8:bd05:01d2:288a:1fc0:0001:0000/16
       - ::1 (equals to ::1/128)
-      
+
       e.g) 127.0.0.1;182.249.0.0/16;182.248.112.128/26;::1 -->
     <add key="RestrictIPAddresses" value="127.0.0.1;::1"/>
     <!-- [optional] If set, specified pattern url request skip http auth and IP Restriction. -->
     <add key="IgnorePathRegex" value="^/Home/Ignore$|^/Ignore\.aspx$"/>
-    <!-- 
+    <!--
       [optional] If set,specified IPs requests skip http auth Restriction.
       value format is same as 'RestrictIPAddresses'
     -->
@@ -66,18 +71,41 @@ Modify Web.config file.
   <system.webServer>
     <modules>
       <add type="HttpAuthModule.HttpAuthModule" name="HttpAuthModule"/>
-    </modules> 
+    </modules>
+  </system.webServer>
+</configuration>
+```
+
+## configure on appSettings section
+
+```XML
+<configuration>
+  <appSettings>
+    <add key="HttpAuthModule.AuthMode" value="Digest" />
+    <add key="HttpAuthModule.Realm" value="SecureZone"/>
+    <add key="HttpAuthModule.Credentials" value="hoge:hogepass;foo:foopass;"/>
+    <add key="HttpAuthModule.DigestNonceValidDuration" value="120"/>
+    <add key="HttpAuthModule.DigestNonceSalt" value="uht9987bbbSAX" />
+    <add key="HttpAuthModule.RestrictIPAddresses" value="127.0.0.1;::1"/>
+    <add key="HttpAuthModule.IgnorePathRegex" value="^/Home/Ignore$|^/Ignore\.aspx$"/>
+    <add key="HttpAuthModule.RestrictIPAddresses" value="127.0.0.1;::1"/>
+  </appSettings>
+
+  <system.webServer>
+    <modules>
+      <add type="HttpAuthModule.HttpAuthModule" name="HttpAuthModule"/>
+    </modules>
   </system.webServer>
 </configuration>
 ```
 
 
-If you apply only http requests for ASP.NET Resource(default.aspx /controller/action, but image.gif, index.html), change "modules -> add" element. 
+If you apply only http requests for ASP.NET Resource(default.aspx /controller/action, but image.gif, index.html), change "modules -> add" element.
 ```XML
   <modules>
     <!-- add preCondition="managedHandler" -->
     <add type="HttpAuthModule.HttpAuthModule" name="HttpAuthModule" preCondition="managedHandler" />
-  </modules> 
+  </modules>
 ```
 
 # Disable HttpAuthModule by AppSettings
@@ -98,4 +126,3 @@ if you add HttpAuthModuleEnabled=false to appSettings, HttpAUthModule doesn't ru
 HttpAuthModule.dll and Web.config is here, https://github.com/nabehiro/HttpAuthModule/PHPResources
 
 please see detail, http://blogs.gine.jp/taka/archives/2753
-
