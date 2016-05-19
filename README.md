@@ -10,7 +10,7 @@ This is Simple Http Authentication HttpModule for ASP.NET (MVC).
 ** Http Auth Module targets the .NET Framework 4.5 **
 
 # Licence
-[Apache License 2.0](https://github.com/nabehiro/HttpAuthModule/LICENSE)
+[Apache License 2.0](https://github.com/nabehiro/HttpAuthModule/blob/master/LICENSE)
 
 # Quick start
 Get Nuget package.
