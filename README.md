@@ -91,7 +91,7 @@ Configure on httpAuthModule section or appSettings section.
     <add key="HttpAuthModule.DigestNonceSalt" value="uht9987bbbSAX" />
     <add key="HttpAuthModule.RestrictIPAddresses" value="127.0.0.1;::1"/>
     <add key="HttpAuthModule.IgnorePathRegex" value="^/Home/Ignore$|^/Ignore\.aspx$"/>
-    <add key="HttpAuthModule.RestrictIPAddresses" value="127.0.0.1;::1"/>
+    <add key="HttpAuthModule.IgnoreIPAddresses" value="127.0.0.1;::1"/>
   </appSettings>
 
   <system.webServer>
@@ -126,6 +126,6 @@ if you add HttpAuthModuleEnabled=false to appSettings, HttpAUthModule doesn't ru
 2. put HttpAuthModule.dll into bin dir.
 3. put Web.config into root dir.
 
-HttpAuthModule.dll and Web.config is here, https://github.com/nabehiro/HttpAuthModule/PHPResources
+HttpAuthModule.dll and Web.config is here, [https://github.com/nabehiro/HttpAuthModule/PHPResources](https://github.com/nabehiro/HttpAuthModule/tree/master/PHPResources)
 
 please see detail, http://blogs.gine.jp/taka/archives/2753
