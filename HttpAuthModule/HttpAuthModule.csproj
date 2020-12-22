@@ -44,16 +44,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BasicAuthStragegy.cs" />
+    <Compile Include="BasicAuthStrategy.cs" />
     <Compile Include="Config.cs" />
     <Compile Include="Credential.cs" />
     <Compile Include="CredentialAuthStrategy.cs" />
-    <Compile Include="DigestAuthStragegy.cs" />
+    <Compile Include="DigestAuthStrategy.cs" />
     <Compile Include="HttpAuthModule.cs" />
     <Compile Include="IAuthStrategy.cs" />
     <Compile Include="IPAddressRange.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RestictIPStragegy.cs" />
+    <Compile Include="RestictIPStrategy.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="HttpAuthModule.nuspec" />
