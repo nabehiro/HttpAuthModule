@@ -9,14 +9,14 @@ using System.Web;
 
 namespace HttpAuthModule
 {
-    internal class DigestAuthStragegy : CredentialAuthStrategy
+    internal class DigestAuthStrategy : CredentialAuthStrategy
     {
         private TimeSpan _nonceValidDuration;
         private string _nonceSalt;
 
         private Dictionary<string, string> _validTokens;
 
-        public DigestAuthStragegy()
+        public DigestAuthStrategy()
             : base()
         {
             var nonceValidDuration = Config.Get("DigestNonceValidDuration", "120");

@@ -5,11 +5,11 @@ using System.Web;
 
 namespace HttpAuthModule
 {
-    internal class BasicAuthStragegy : CredentialAuthStrategy
+    internal class BasicAuthStrategy : CredentialAuthStrategy
     {
         private string[] _validAuthVals;
 
-        public BasicAuthStragegy()
+        public BasicAuthStrategy()
             : base()
         {
             _validAuthVals = Credentials
