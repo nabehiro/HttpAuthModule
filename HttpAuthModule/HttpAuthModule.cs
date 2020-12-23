@@ -44,12 +44,12 @@ namespace HttpAuthModule
 
                         var restrictIPAddresses = Config.Get("RestrictIPAddresses");
                         if (!string.IsNullOrEmpty(restrictIPAddresses))
-                            _authStrategies.Add(new RestictIPStragegy(restrictIPAddresses));
+                            _authStrategies.Add(new RestictIPStrategy(restrictIPAddresses));
 
                         switch (Config.Get("AuthMode").ToLower())
                         {
-                            case "basic": _authStrategies.Add(new BasicAuthStragegy()); break;
-                            case "digest": _authStrategies.Add(new DigestAuthStragegy()); break;
+                            case "basic": _authStrategies.Add(new BasicAuthStrategy()); break;
+                            case "digest": _authStrategies.Add(new DigestAuthStrategy()); break;
                             case "none": break;
                             default: throw new InvalidOperationException("AuthMode must be Basic, Digest or None.");
                         }
