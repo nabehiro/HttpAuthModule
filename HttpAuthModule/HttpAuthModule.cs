@@ -44,7 +44,7 @@ namespace HttpAuthModule
 
                         var restrictIPAddresses = Config.Get("RestrictIPAddresses");
                         if (!string.IsNullOrEmpty(restrictIPAddresses))
-                            _authStrategies.Add(new RestictIPStrategy(restrictIPAddresses));
+                            _authStrategies.Add(new RestrictIPStrategy(restrictIPAddresses));
 
                         switch (Config.Get("AuthMode").ToLower())
                         {

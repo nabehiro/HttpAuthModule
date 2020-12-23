@@ -8,7 +8,7 @@ namespace HttpAuthModule
     internal class IPAddressRange
     {
         private AddressFamily _addressFamily;
-        private byte[] _netowrkAddressBytes;
+        private byte[] _networkAddressBytes;
         private byte[] _subnetMaskBytes;
 
         /// <param name="ipRangeStr">
@@ -42,8 +42,8 @@ namespace HttpAuthModule
             else
                 maskRange = maxMaskRange;
 
-            _netowrkAddressBytes = ipAddr.GetAddressBytes();
-            _subnetMaskBytes = Enumerable.Repeat<byte>(0xFF, _netowrkAddressBytes.Length).ToArray();
+            _networkAddressBytes = ipAddr.GetAddressBytes();
+            _subnetMaskBytes = Enumerable.Repeat<byte>(0xFF, _networkAddressBytes.Length).ToArray();
 
             for (int i = 0; i < (maxMaskRange - maskRange); i++)
                 _subnetMaskBytes[_subnetMaskBytes.Length - 1 - i / 8] -= (byte)(1 << (i % 8));
@@ -56,7 +56,7 @@ namespace HttpAuthModule
 
             var addrBytes = ipAddr.GetAddressBytes();
             for (int i = 0; i < addrBytes.Length; i++)
-                if ((addrBytes[i] & _subnetMaskBytes[i]) != _netowrkAddressBytes[i])
+                if ((addrBytes[i] & _subnetMaskBytes[i]) != _networkAddressBytes[i])
                     return false;
 
             return true;
