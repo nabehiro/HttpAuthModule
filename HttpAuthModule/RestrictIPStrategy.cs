@@ -5,11 +5,11 @@ using System.Web;
 
 namespace HttpAuthModule
 {
-    internal class RestictIPStrategy : IAuthStrategy
+    internal class RestrictIPStrategy : IAuthStrategy
     {
         private IPAddressRange[] _ranges;
 
-        public RestictIPStrategy(string ipAddresses)
+        public RestrictIPStrategy(string ipAddresses)
         {
             _ranges = ipAddresses.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries)
                 .Select(s => new IPAddressRange(s))
