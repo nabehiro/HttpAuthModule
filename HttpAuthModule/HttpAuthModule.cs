@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
@@ -44,12 +44,12 @@ namespace HttpAuthModule
 
                         var restrictIPAddresses = Config.Get("RestrictIPAddresses");
                         if (!string.IsNullOrEmpty(restrictIPAddresses))
-                            _authStrategies.Add(new RestictIPStragegy(restrictIPAddresses));
+                            _authStrategies.Add(new RestictIPStrategy(restrictIPAddresses));
 
                         switch (Config.Get("AuthMode").ToLower())
                         {
-                            case "basic": _authStrategies.Add(new BasicAuthStragegy()); break;
-                            case "digest": _authStrategies.Add(new DigestAuthStragegy()); break;
+                            case "basic": _authStrategies.Add(new BasicAuthStrategy()); break;
+                            case "digest": _authStrategies.Add(new DigestAuthStrategy()); break;
                             case "none": break;
                             default: throw new InvalidOperationException("AuthMode must be Basic, Digest or None.");
                         }
@@ -79,13 +79,41 @@ namespace HttpAuthModule
             }
         }
 
+        
+
         private void context_AuthenticateRequest(object sender, EventArgs e)
         {
             var app = (HttpApplication)sender;
 
             if (_ignoreIPAddresses != null)
             {
-                var userHostAddress = app.Context.Request.UserHostAddress;
+
+
+                ///////////////////////////////////////////////////////////////////////////////////////
+
+                var userHostAddress = "";
+                // Check CF Connecting IP
+                if (app.Context.Request.Headers["CF-CONNECTING-IP"] != null)
+                {
+                    userHostAddress = app.Context.Request.Headers["CF-CONNECTING-IP"];
+                }
+                else if (userHostAddress == null || userHostAddress.ToLower() == "unknown")
+                {
+                    userHostAddress = app.Context.Request.ServerVariables["HTTP_X_FORWARDED_FOR"];
+
+                }
+                else if (userHostAddress == null || userHostAddress.ToLower() == "unknown")
+                {
+                    userHostAddress = app.Context.Request.ServerVariables["REMOTE_ADDR"];
+
+                }
+                else if (string.IsNullOrEmpty(userHostAddress) || userHostAddress.ToLower() == "unknown")
+                {
+
+                    userHostAddress = app.Context.Request.UserHostAddress;
+                }
+
+
                 if (!string.IsNullOrEmpty(userHostAddress) &&  _ignoreIPAddresses.Any(a => a.IsInRange(userHostAddress)))
                     return;
             }
