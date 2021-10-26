@@ -90,21 +90,16 @@ namespace HttpAuthModule
 
 
                 ///////////////////////////////////////////////////////////////////////////////////////
-
+                // Generic
                 var userHostAddress = "";
                 // Check CF Connecting IP
                 if (app.Context.Request.Headers["CF-CONNECTING-IP"] != null)
                 {
                     userHostAddress = app.Context.Request.Headers["CF-CONNECTING-IP"];
                 }
-                else if (userHostAddress == null || userHostAddress.ToLower() == "unknown")
+                else if (String.IsNullOrEmpty(userHostAddress) || userHostAddress.ToLower() == "unknown")
                 {
                     userHostAddress = app.Context.Request.ServerVariables["HTTP_X_FORWARDED_FOR"];
-
-                }
-                else if (userHostAddress == null || userHostAddress.ToLower() == "unknown")
-                {
-                    userHostAddress = app.Context.Request.ServerVariables["REMOTE_ADDR"];
 
                 }
                 else if (string.IsNullOrEmpty(userHostAddress) || userHostAddress.ToLower() == "unknown")
@@ -112,7 +107,20 @@ namespace HttpAuthModule
 
                     userHostAddress = app.Context.Request.UserHostAddress;
                 }
+                //////////////////////////////////////////////////////////////////////////////////////
+                // If using CF & Azure App Service
+                //var userHostAddress = "";
+                //// Check CF Connecting IP
+                //if (app.Context.Request.Headers["CF-CONNECTING-IP"] != null)
+                //{
+                //    userHostAddress = app.Context.Request.Headers["CF-CONNECTING-IP"];
+                //}
+                //else if (string.IsNullOrEmpty(userHostAddress) || userHostAddress.ToLower() == "unknown")
+                //{
 
+                //    userHostAddress = app.Context.Request.UserHostAddress;
+                //}
+                //////////////////////////////////////////////////////////////////////////////////////
 
                 if (!string.IsNullOrEmpty(userHostAddress) &&  _ignoreIPAddresses.Any(a => a.IsInRange(userHostAddress)))
                     return;
