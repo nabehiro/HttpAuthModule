@@ -15,6 +15,8 @@ namespace HttpAuthModule
         private static List<IAuthStrategy> _authStrategies = new List<IAuthStrategy>();
         private static Regex _ignorePathRegex = null;
         private static IPAddressRange[] _ignoreIPAddresses = null;
+        private static string[] _clientIPHeaders = null;
+        private static string[] _clientIPServerVariables = null;
 
         public void Dispose() { }
 
@@ -73,13 +75,46 @@ namespace HttpAuthModule
                                 .Select(s => new IPAddressRange(s))
                                 .ToArray();
 
+                        var clientIPHeaders = Config.Get("clientIPHeaders");
+                        if (!string.IsNullOrEmpty(clientIPHeaders))
+                            _clientIPHeaders = clientIPHeaders.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+
+                        var clientIPServerVariables = Config.Get("clientIPServerVariables");
+                        if (!string.IsNullOrEmpty(clientIPServerVariables))
+                            _clientIPServerVariables = clientIPServerVariables.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+
                         _initialized = true;
                     }
                 }
             }
         }
 
-        
+        public static IEnumerable<string> GetClientIPAddresses(HttpApplication app)
+        {
+            var ip = app.Context.Request.UserHostAddress;
+            if (!string.IsNullOrEmpty(ip))
+                yield return ip;
+
+            if (_clientIPHeaders != null)
+            {
+                foreach (var key in _clientIPHeaders)
+                {
+                    ip = app.Context.Request.Headers[key];
+                    if (!string.IsNullOrEmpty(ip))
+                        yield return ip;
+                }
+            }
+
+            if (_clientIPServerVariables != null)
+            {
+                foreach (var key in _clientIPServerVariables)
+                {
+                    ip = app.Context.Request.ServerVariables[key];
+                    if (!string.IsNullOrEmpty(ip))
+                        yield return ip;
+                }
+            }
+        }
 
         private void context_AuthenticateRequest(object sender, EventArgs e)
         {
@@ -87,43 +122,11 @@ namespace HttpAuthModule
 
             if (_ignoreIPAddresses != null)
             {
-
-
-                ///////////////////////////////////////////////////////////////////////////////////////
-                // Generic
-                var userHostAddress = "";
-                // Check CF Connecting IP
-                if (app.Context.Request.Headers["CF-CONNECTING-IP"] != null)
+                foreach (var ip in GetClientIPAddresses(app))
                 {
-                    userHostAddress = app.Context.Request.Headers["CF-CONNECTING-IP"];
+                    if (_ignoreIPAddresses.Any(a => a.IsInRange(ip)))
+                        return;
                 }
-                else if (String.IsNullOrEmpty(userHostAddress) || userHostAddress.ToLower() == "unknown")
-                {
-                    userHostAddress = app.Context.Request.ServerVariables["HTTP_X_FORWARDED_FOR"];
-
-                }
-                else if (string.IsNullOrEmpty(userHostAddress) || userHostAddress.ToLower() == "unknown")
-                {
-
-                    userHostAddress = app.Context.Request.UserHostAddress;
-                }
-                //////////////////////////////////////////////////////////////////////////////////////
-                // If using CF & Azure App Service
-                //var userHostAddress = "";
-                //// Check CF Connecting IP
-                //if (app.Context.Request.Headers["CF-CONNECTING-IP"] != null)
-                //{
-                //    userHostAddress = app.Context.Request.Headers["CF-CONNECTING-IP"];
-                //}
-                //else if (string.IsNullOrEmpty(userHostAddress) || userHostAddress.ToLower() == "unknown")
-                //{
-
-                //    userHostAddress = app.Context.Request.UserHostAddress;
-                //}
-                //////////////////////////////////////////////////////////////////////////////////////
-
-                if (!string.IsNullOrEmpty(userHostAddress) &&  _ignoreIPAddresses.Any(a => a.IsInRange(userHostAddress)))
-                    return;
             }
 
             if (_ignorePathRegex != null && _ignorePathRegex.IsMatch(app.Context.Request.RawUrl))

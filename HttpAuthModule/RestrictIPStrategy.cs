@@ -18,14 +18,13 @@ namespace HttpAuthModule
 
         public bool Execute(HttpApplication app)
         {
-            IPAddress ipAddr;
-            if (!IPAddress.TryParse(app.Context.Request.UserHostAddress, out ipAddr))
-                return RespondError(app);
+            foreach (var ip in HttpAuthModule.GetClientIPAddresses(app))
+            {
+                if (_ranges.Any(a => a.IsInRange(ip)))
+                    return true;
+            }
 
-            if (_ranges.Any(c => c.IsInRange(ipAddr)))
-                return true;
-            else
-                return RespondError(app);
+            return RespondError(app);
         }
 
         private bool RespondError(HttpApplication app)
