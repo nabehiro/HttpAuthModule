@@ -2,7 +2,7 @@
 <package>
   <metadata>
     <id>HttpAuthModule</id>
-    <version>$version$</version>
+    <version>2.3.0</version>
     <title>Http Auth Module</title>
     <authors>nabehiro</authors>
     <owners>nabehiro</owners>
