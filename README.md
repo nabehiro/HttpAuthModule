@@ -69,6 +69,10 @@ Configure on httpAuthModule section or appSettings section.
       value format is same as 'RestrictIPAddresses'
     -->
     <add key="IgnoreIPAddresses" value="127.0.0.1;::1"/>
+    <!-- [optional] If set, specified value of Request Header is regarded as Client IP. -->
+    <!-- <add key="ClientIPHeaders" value="CF-CONNECTING-IP;True-Client-IP"/> -->
+    <!-- [optional] If set, specified value of Server Variable is regarded as Client IP. -->
+    <!-- <add key="ClientIPServerVariables" value="HTTP_X_FORWARDED_FOR"/> -->
   </httpAuthModule>
 
   <system.webServer>
