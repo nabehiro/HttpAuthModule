@@ -7,6 +7,9 @@ using System.Web;
 
 namespace HttpAuthModule
 {
+    /// <summary>
+    /// Implements the authentication HTTP module.
+    /// </summary>
     public class HttpAuthModule : IHttpModule
     {
         private static object _lock = new object();
@@ -18,8 +21,15 @@ namespace HttpAuthModule
         private static string[] _clientIPHeaders = null;
         private static string[] _clientIPServerVariables = null;
 
+        /// <summary>
+        /// Disposes the current instance.
+        /// </summary>
         public void Dispose() { }
 
+        /// <summary>
+        /// Initializes a new instance of the
+        /// <see cref="HttpAuthModule"/> class.
+        /// </summary>
         public void Init(HttpApplication context)
         {
             InitializeStatic();
@@ -27,6 +37,10 @@ namespace HttpAuthModule
                 context.AuthenticateRequest += new EventHandler(context_AuthenticateRequest);
         }
 
+        /// <summary>
+        /// Initializes the static properties of the
+        /// <see cref="HttpAuthModule"/> class.
+        /// </summary>
         private void InitializeStatic()
         {
             if (!_initialized)
@@ -89,6 +103,16 @@ namespace HttpAuthModule
             }
         }
 
+        /// <summary>
+        /// Returns the available client IP addresses
+        /// in the HTTP request.
+        /// </summary>
+        /// <param name="app">
+        /// The HTTP application.
+        /// </param>
+        /// <returns>
+        /// The enumerable with the client IP addresses.
+        /// </returns>
         public static IEnumerable<string> GetClientIPAddresses(HttpApplication app)
         {
             var ip = app.Context.Request.UserHostAddress;

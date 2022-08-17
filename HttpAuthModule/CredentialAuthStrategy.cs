@@ -5,11 +5,18 @@ using System.Web;
 
 namespace HttpAuthModule
 {
+    /// <summary>
+    /// Implements the Credentials authentication strategy.
+    /// </summary>
     internal abstract class CredentialAuthStrategy : IAuthStrategy
     {
         protected string Realm { get; set; }
         protected Credential[] Credentials { get; set; }
 
+        /// <summary>
+        /// Initializes a new instance of the
+        /// <see cref="CredentialAuthStrategy"/> class.
+        /// </summary>
         public CredentialAuthStrategy()
         {
             Realm = Config.Get("Realm", "SecureZone");
@@ -26,8 +33,18 @@ namespace HttpAuthModule
                 throw new InvalidOperationException("Credentials is invalid.");
         }
 
+        /// <inheritdoc/>
         public abstract bool Execute(HttpApplication app);
 
+        /// <summary>
+        /// Sends a 401 HTTP status code response to the request.
+        /// </summary>
+        /// <param name="app">
+        /// The HTTP application.
+        /// </param>
+        /// <param name="wwwAuthenticate">
+        /// The WWW-Authenticate header.
+        /// </param>
         protected void Respond401(HttpApplication app, string wwwAuthenticate)
         {
             app.Context.Response.Clear();
