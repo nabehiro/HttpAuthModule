@@ -5,10 +5,17 @@ using System.Web;
 
 namespace HttpAuthModule
 {
+    /// <summary>
+    /// Implements the Basic authentication strategy.
+    /// </summary> 
     internal class BasicAuthStrategy : CredentialAuthStrategy
     {
         private string[] _validAuthVals;
 
+        /// <summary>
+        /// Initializes a new instance of the
+        /// <see cref="BasicAuthStrategy"/> class.
+        /// </summary>
         public BasicAuthStrategy()
             : base()
         {
@@ -17,6 +24,7 @@ namespace HttpAuthModule
                 .ToArray();
         }
 
+        /// <inheritdoc/>
         public override bool Execute(HttpApplication app)
         {
             var authVal = app.Context.Request.Headers["Authorization"];

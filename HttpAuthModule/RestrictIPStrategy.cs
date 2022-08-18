@@ -5,10 +5,17 @@ using System.Web;
 
 namespace HttpAuthModule
 {
+    /// <summary>
+    /// Implements the Restricted IP authentication strategy.
+    /// </summary>
     internal class RestrictIPStrategy : IAuthStrategy
     {
         private IPAddressRange[] _ranges;
 
+        /// <summary>
+        /// Initializes a new instance of the
+        /// <see cref="RestrictIPStrategy"/> class.
+        /// </summary>
         public RestrictIPStrategy(string ipAddresses)
         {
             _ranges = ipAddresses.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries)
@@ -16,6 +23,7 @@ namespace HttpAuthModule
                 .ToArray();
         }
 
+        /// <inheritdoc/>
         public bool Execute(HttpApplication app)
         {
             foreach (var ip in HttpAuthModule.GetClientIPAddresses(app))

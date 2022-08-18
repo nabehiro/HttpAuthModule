@@ -9,6 +9,9 @@ using System.Web;
 
 namespace HttpAuthModule
 {
+    /// <summary>
+    /// Implements the Digest authentication strategy.
+    /// </summary>
     internal class DigestAuthStrategy : CredentialAuthStrategy
     {
         private TimeSpan _nonceValidDuration;
@@ -16,6 +19,10 @@ namespace HttpAuthModule
 
         private Dictionary<string, string> _validTokens;
 
+        /// <summary>
+        /// Initializes a new instance of the
+        /// <see cref="DigestAuthStrategy"/> class.
+        /// </summary>
         public DigestAuthStrategy()
             : base()
         {
@@ -33,6 +40,7 @@ namespace HttpAuthModule
                 .ToDictionary(c => c.Name, c => GetMD5(string.Format("{0}:{1}:{2}", c.Name, Realm, c.Password)));
         }
 
+        /// <inheritdoc/>
         public override bool Execute(HttpApplication app)
         {
             var authVal = app.Context.Request.Headers["Authorization"];
