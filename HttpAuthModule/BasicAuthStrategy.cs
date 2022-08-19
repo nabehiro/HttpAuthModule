@@ -11,7 +11,7 @@
     internal class BasicAuthStrategy
         : CredentialAuthStrategy
     {
-        private string[] _validAuthVals;
+        private string[] validAuthVals;
 
         /// <summary>
         /// Initializes a new instance of the
@@ -20,7 +20,7 @@
         public BasicAuthStrategy()
             : base()
         {
-            this._validAuthVals = this.Credentials
+            this.validAuthVals = this.Credentials
                 .Select(c => "Basic " + Convert.ToBase64String(Encoding.ASCII.GetBytes(c.Name + ":" + c.Password)))
                 .ToArray();
         }
@@ -30,7 +30,7 @@
         {
             var authVal = app.Context.Request.Headers["Authorization"];
 
-            if (!this._validAuthVals.Contains(authVal))
+            if (!this.validAuthVals.Contains(authVal))
             {
                 this.Respond401(app, "Basic Realm=" + this.Realm);
 

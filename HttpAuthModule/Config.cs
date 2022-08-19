@@ -9,7 +9,7 @@
     /// </summary>
     internal static class Config
     {
-        private static readonly NameValueCollection _section =
+        private static readonly NameValueCollection Section =
             (NameValueCollection)ConfigurationManager.GetSection("httpAuthModule");
 
         /// <summary>
@@ -27,7 +27,7 @@
         /// </returns>
         public static string Get(string key, string nullVal = "")
         {
-            var val = ConfigurationManager.AppSettings["HttpAuthModule." + key] ?? _section[key];
+            var val = ConfigurationManager.AppSettings["HttpAuthModule." + key] ?? Section[key];
             return string.IsNullOrEmpty(val) ? nullVal : val;
         }
     }

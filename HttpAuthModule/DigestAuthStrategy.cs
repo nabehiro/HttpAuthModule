@@ -14,11 +14,11 @@
     internal class DigestAuthStrategy
         : CredentialAuthStrategy
     {
-        private TimeSpan _nonceValidDuration;
+        private TimeSpan nonceValidDuration;
 
-        private string _nonceSalt;
+        private string nonceSalt;
 
-        private Dictionary<string, string> _validTokens;
+        private Dictionary<string, string> validTokens;
 
         /// <summary>
         /// Initializes a new instance of the
@@ -36,16 +36,16 @@
                 throw new InvalidOperationException("DigestNonceValidDuration is invalid.");
             }
 
-            this._nonceValidDuration = new TimeSpan(0, intNonceValidDuration, 0);
+            this.nonceValidDuration = new TimeSpan(0, intNonceValidDuration, 0);
 
-            this._nonceSalt = Config.Get("DigestNonceSalt");
+            this.nonceSalt = Config.Get("DigestNonceSalt");
 
-            if (string.IsNullOrEmpty(this._nonceSalt))
+            if (string.IsNullOrEmpty(this.nonceSalt))
             {
                 throw new InvalidOperationException("DigestNonceSalt is required.");
             }
 
-            this._validTokens = this.Credentials
+            this.validTokens = this.Credentials
                 .ToDictionary(c => c.Name, c => GetMD5(string.Format("{0}:{1}:{2}", c.Name, this.Realm, c.Password)));
         }
 
@@ -75,7 +75,7 @@
 
             var username = vals.ContainsKey("username") ? vals["username"] : null;
 
-            if (!this._validTokens.ContainsKey(username))
+            if (!this.validTokens.ContainsKey(username))
             {
                 return this.RespondError(app);
             }
@@ -85,7 +85,7 @@
             var qop = vals.ContainsKey("qop") ? vals["qop"] : null;
             var nc = vals.ContainsKey("nc") ? vals["nc"] : null;
             var response = vals.ContainsKey("response") ? vals["response"] : null;
-            var a1 = this._validTokens[username];
+            var a1 = this.validTokens[username];
             var a2 = GetMD5(app.Context.Request.HttpMethod + ":" + uri);
 
             if (response != GetMD5(string.Format("{0}:{1}:{2}:{3}:{4}:{5}", a1, nonce, nc, cnonce, qop, a2)))
@@ -122,7 +122,7 @@
 
         private string CreateNonce(DateTime dt)
         {
-            string hash = string.Format("{0}{1}", this._nonceSalt, dt.Ticks);
+            string hash = string.Format("{0}{1}", this.nonceSalt, dt.Ticks);
 
             for (int i = 0; i < 3; i++)
             {
@@ -150,7 +150,7 @@
                 return false;
             }
 
-            return dt + this._nonceValidDuration >= DateTime.UtcNow && nonce == this.CreateNonce(dt);
+            return dt + this.nonceValidDuration >= DateTime.UtcNow && nonce == this.CreateNonce(dt);
         }
     }
 }

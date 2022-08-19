@@ -10,9 +10,9 @@
     /// </summary>
     internal class IPAddressRange
     {
-        private AddressFamily _addressFamily;
-        private byte[] _networkAddressBytes;
-        private byte[] _subnetMaskBytes;
+        private AddressFamily addressFamily;
+        private byte[] networkAddressBytes;
+        private byte[] subnetMaskBytes;
 
         /// <summary>
         /// Initializes a new instance of the
@@ -48,14 +48,14 @@
                 throw new InvalidOperationException(string.Format("IP Address({0}) is invalid format.", ipRangeString));
             }
 
-            this._addressFamily = ipAddr.AddressFamily;
+            this.addressFamily = ipAddr.AddressFamily;
 
-            if (this._addressFamily != AddressFamily.InterNetwork && this._addressFamily != AddressFamily.InterNetworkV6)
+            if (this.addressFamily != AddressFamily.InterNetwork && this.addressFamily != AddressFamily.InterNetworkV6)
             {
                 throw new InvalidOperationException(string.Format("IP Address({0}) is not ip4 or ip6 address famiry.", ipRangeString));
             }
 
-            var maxMaskRange = this._addressFamily == AddressFamily.InterNetwork ? 32 : 128;
+            var maxMaskRange = this.addressFamily == AddressFamily.InterNetwork ? 32 : 128;
 
             int maskRange;
 
@@ -71,12 +71,12 @@
                 maskRange = maxMaskRange;
             }
 
-            this._networkAddressBytes = ipAddr.GetAddressBytes();
-            this._subnetMaskBytes = Enumerable.Repeat<byte>(0xFF, this._networkAddressBytes.Length).ToArray();
+            this.networkAddressBytes = ipAddr.GetAddressBytes();
+            this.subnetMaskBytes = Enumerable.Repeat<byte>(0xFF, this.networkAddressBytes.Length).ToArray();
 
             for (int i = 0; i < (maxMaskRange - maskRange); i++)
             {
-                this._subnetMaskBytes[this._subnetMaskBytes.Length - 1 - (i / 8)] -= (byte)(1 << (i % 8));
+                this.subnetMaskBytes[this.subnetMaskBytes.Length - 1 - (i / 8)] -= (byte)(1 << (i % 8));
             }
         }
 
@@ -92,7 +92,7 @@
         /// </returns>
         public bool IsInRange(IPAddress ipAddr)
         {
-            if (ipAddr.AddressFamily != this._addressFamily)
+            if (ipAddr.AddressFamily != this.addressFamily)
             {
                 return false;
             }
@@ -100,7 +100,7 @@
             var addrBytes = ipAddr.GetAddressBytes();
             for (int i = 0; i < addrBytes.Length; i++)
             {
-                if ((addrBytes[i] & this._subnetMaskBytes[i]) != this._networkAddressBytes[i])
+                if ((addrBytes[i] & this.subnetMaskBytes[i]) != this.networkAddressBytes[i])
                 {
                     return false;
                 }

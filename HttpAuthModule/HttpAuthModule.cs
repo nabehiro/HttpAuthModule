@@ -13,10 +13,10 @@ namespace HttpAuthModule
     public class HttpAuthModule
         : IHttpModule
     {
-        private static object _lock = new object();
-        private static bool _initialized = false;
-        private static bool _enabled = true;
-        private static List<IAuthStrategy> _authStrategies = new List<IAuthStrategy>();
+        private static object @lock = new object();
+        private static bool initialized = false;
+        private static bool enabled = true;
+        private static List<IAuthStrategy> authStrategies = new List<IAuthStrategy>();
         private static Regex _ignorePathRegex = null;
         private static IPAddressRange[] _ignoreIPAddresses = null;
         private static string[] _clientIPHeaders = null;
@@ -86,7 +86,7 @@ namespace HttpAuthModule
         {
             this.InitializeStatic();
 
-            if (_enabled)
+            if (enabled)
             {
                 context.AuthenticateRequest += new EventHandler(this.ContextAuthenticateRequest);
             }
@@ -98,15 +98,15 @@ namespace HttpAuthModule
         /// </summary>
         private void InitializeStatic()
         {
-            if (!_initialized)
+            if (!initialized)
             {
-                lock (_lock)
+                lock (@lock)
                 {
-                    if (!_initialized)
+                    if (!initialized)
                     {
                         try
                         {
-                            _enabled = bool.Parse(ConfigurationManager.AppSettings["HttpAuthModuleEnabled"] ?? "true");
+                            enabled = bool.Parse(ConfigurationManager.AppSettings["HttpAuthModuleEnabled"] ?? "true");
                         }
                         catch (Exception ex)
                         {
@@ -117,13 +117,13 @@ namespace HttpAuthModule
 
                         if (!string.IsNullOrEmpty(restrictIPAddresses))
                         {
-                            _authStrategies.Add(new RestrictIPStrategy(restrictIPAddresses));
+                            authStrategies.Add(new RestrictIPStrategy(restrictIPAddresses));
                         }
 
                         switch (Config.Get("AuthMode").ToLower())
                         {
-                            case "basic": _authStrategies.Add(new BasicAuthStrategy()); break;
-                            case "digest": _authStrategies.Add(new DigestAuthStrategy()); break;
+                            case "basic": authStrategies.Add(new BasicAuthStrategy()); break;
+                            case "digest": authStrategies.Add(new DigestAuthStrategy()); break;
                             case "none": break;
                             default: throw new InvalidOperationException("AuthMode must be Basic, Digest or None.");
                         }
@@ -166,7 +166,7 @@ namespace HttpAuthModule
                             _clientIPServerVariables = clientIPServerVariables.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
                         }
 
-                        _initialized = true;
+                        initialized = true;
                     }
                 }
             }
@@ -192,7 +192,7 @@ namespace HttpAuthModule
                 return;
             }
 
-            foreach (var s in _authStrategies)
+            foreach (var s in authStrategies)
             {
 #if DEBUG
                 var sw = System.Diagnostics.Stopwatch.StartNew();

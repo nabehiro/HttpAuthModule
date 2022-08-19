@@ -11,7 +11,7 @@
     internal class RestrictIPStrategy
         : IAuthStrategy
     {
-        private IPAddressRange[] _ranges;
+        private IPAddressRange[] ranges;
 
         /// <summary>
         /// Initializes a new instance of the
@@ -22,7 +22,7 @@
         /// </param>
         public RestrictIPStrategy(string ipAddresses)
         {
-            this._ranges = ipAddresses
+            this.ranges = ipAddresses
                 .Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries)
                 .Select(s => new IPAddressRange(s))
                 .ToArray();
@@ -33,7 +33,7 @@
         {
             foreach (var ip in HttpAuthModule.GetClientIPAddresses(app))
             {
-                if (this._ranges.Any(a => a.IsInRange(ip)))
+                if (this.ranges.Any(a => a.IsInRange(ip)))
                 {
                     return true;
                 }
