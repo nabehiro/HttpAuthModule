@@ -1,14 +1,15 @@
-﻿using System;
-using System.Linq;
-using System.Net;
-using System.Web;
-
-namespace HttpAuthModule
+﻿namespace HttpAuthModule
 {
+    using System;
+    using System.Linq;
+    using System.Net;
+    using System.Web;
+
     /// <summary>
     /// Implements the Restricted IP authentication strategy.
     /// </summary>
-    internal class RestrictIPStrategy : IAuthStrategy
+    internal class RestrictIPStrategy
+        : IAuthStrategy
     {
         private IPAddressRange[] _ranges;
 
@@ -16,9 +17,13 @@ namespace HttpAuthModule
         /// Initializes a new instance of the
         /// <see cref="RestrictIPStrategy"/> class.
         /// </summary>
+        /// <param name="ipAddresses">
+        /// A semi-colon separated list of IP addresses.
+        /// </param>
         public RestrictIPStrategy(string ipAddresses)
         {
-            _ranges = ipAddresses.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries)
+            this._ranges = ipAddresses
+                .Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries)
                 .Select(s => new IPAddressRange(s))
                 .ToArray();
         }
@@ -28,11 +33,13 @@ namespace HttpAuthModule
         {
             foreach (var ip in HttpAuthModule.GetClientIPAddresses(app))
             {
-                if (_ranges.Any(a => a.IsInRange(ip)))
+                if (this._ranges.Any(a => a.IsInRange(ip)))
+                {
                     return true;
+                }
             }
 
-            return RespondError(app);
+            return this.RespondError(app);
         }
 
         private bool RespondError(HttpApplication app)
@@ -41,6 +48,7 @@ namespace HttpAuthModule
             app.Context.Response.Status = "403 Forbidden";
             app.Context.Response.StatusCode = 403;
             app.Context.Response.End();
+
             return false;
         }
     }

@@ -8,7 +8,8 @@
     /// <summary>
     /// Implements the Basic authentication strategy.
     /// </summary>
-    internal class BasicAuthStrategy : CredentialAuthStrategy
+    internal class BasicAuthStrategy
+        : CredentialAuthStrategy
     {
         private string[] _validAuthVals;
 

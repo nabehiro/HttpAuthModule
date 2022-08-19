@@ -76,7 +76,7 @@
 
             for (int i = 0; i < (maxMaskRange - maskRange); i++)
             {
-                this._subnetMaskBytes[this._subnetMaskBytes.Length - 1 - i / 8] -= (byte)(1 << (i % 8));
+                this._subnetMaskBytes[this._subnetMaskBytes.Length - 1 - (i / 8)] -= (byte)(1 << (i % 8));
             }
         }
 
