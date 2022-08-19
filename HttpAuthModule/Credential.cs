@@ -1,4 +1,6 @@
-﻿namespace HttpAuthModule
+﻿// Copyright (c) Hiroyuki Watanabe. All rights reserved.
+
+namespace HttpAuthModule
 {
     /// <summary>
     /// Represents a credentials.

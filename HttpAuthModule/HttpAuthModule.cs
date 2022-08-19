@@ -1,3 +1,5 @@
+// Copyright (c) Hiroyuki Watanabe. All rights reserved.
+
 namespace HttpAuthModule
 {
     using System;

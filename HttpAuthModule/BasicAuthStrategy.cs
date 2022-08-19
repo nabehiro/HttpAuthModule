@@ -1,4 +1,6 @@
-﻿namespace HttpAuthModule
+﻿// Copyright (c) Hiroyuki Watanabe. All rights reserved.
+
+namespace HttpAuthModule
 {
     using System;
     using System.Linq;
