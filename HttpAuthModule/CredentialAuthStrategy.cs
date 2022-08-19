@@ -1,37 +1,55 @@
-﻿using System;
-using System.Configuration;
-using System.Linq;
-using System.Web;
-
-namespace HttpAuthModule
+﻿namespace HttpAuthModule
 {
+    using System;
+    using System.Configuration;
+    using System.Linq;
+    using System.Web;
+
     /// <summary>
     /// Implements the Credentials authentication strategy.
     /// </summary>
-    internal abstract class CredentialAuthStrategy : IAuthStrategy
+    internal abstract class CredentialAuthStrategy
+        : IAuthStrategy
     {
-        protected string Realm { get; set; }
-        protected Credential[] Credentials { get; set; }
-
         /// <summary>
         /// Initializes a new instance of the
         /// <see cref="CredentialAuthStrategy"/> class.
         /// </summary>
         public CredentialAuthStrategy()
         {
-            Realm = Config.Get("Realm", "SecureZone");
+            this.Realm = Config.Get("Realm", "SecureZone");
 
-            Credentials = Config.Get("Credentials")
+            this.Credentials = Config.Get("Credentials")
                 .Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries)
-                .Select(str =>
-                {
-                    var array = str.Trim().Split(new char[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
-                    if (array.Length != 2) throw new InvalidOperationException("Credentials is invalid.");
-                    return new Credential { Name = array[0], Password = array[1] };
-                }).ToArray();
-            if (Credentials.Length == 0)
+                .Select(
+                    str =>
+                    {
+                        var array = str.Trim().Split(new char[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
+
+                        if (array.Length != 2)
+                        {
+                            throw new InvalidOperationException("Credentials is invalid.");
+                        }
+
+                        return new Credential { Name = array[0], Password = array[1] };
+                    })
+                .ToArray();
+
+            if (this.Credentials.Length == 0)
+            {
                 throw new InvalidOperationException("Credentials is invalid.");
+            }
         }
+
+        /// <summary>
+        /// Gets or sets the realm.
+        /// </summary>
+        protected string Realm { get; set; }
+
+        /// <summary>
+        /// Gets or sets the credentials.
+        /// </summary>
+        protected Credential[] Credentials { get; set; }
 
         /// <inheritdoc/>
         public abstract bool Execute(HttpApplication app);

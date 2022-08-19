@@ -1,8 +1,8 @@
-﻿using System.Collections.Specialized;
-using System.Configuration;
-
-namespace HttpAuthModule
+﻿namespace HttpAuthModule
 {
+    using System.Collections.Specialized;
+    using System.Configuration;
+
     /// <summary>
     /// Represents the <see cref="HttpAuthModule"/>
     /// configuration section.

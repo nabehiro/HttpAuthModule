@@ -1,13 +1,13 @@
-﻿using System;
-using System.Linq;
-using System.Text;
-using System.Web;
-
-namespace HttpAuthModule
+﻿namespace HttpAuthModule
 {
+    using System;
+    using System.Linq;
+    using System.Text;
+    using System.Web;
+
     /// <summary>
     /// Implements the Basic authentication strategy.
-    /// </summary> 
+    /// </summary>
     internal class BasicAuthStrategy : CredentialAuthStrategy
     {
         private string[] _validAuthVals;
@@ -19,7 +19,7 @@ namespace HttpAuthModule
         public BasicAuthStrategy()
             : base()
         {
-            _validAuthVals = Credentials
+            this._validAuthVals = this.Credentials
                 .Select(c => "Basic " + Convert.ToBase64String(Encoding.ASCII.GetBytes(c.Name + ":" + c.Password)))
                 .ToArray();
         }
@@ -28,13 +28,15 @@ namespace HttpAuthModule
         public override bool Execute(HttpApplication app)
         {
             var authVal = app.Context.Request.Headers["Authorization"];
-            if (!_validAuthVals.Contains(authVal))
+
+            if (!this._validAuthVals.Contains(authVal))
             {
-                Respond401(app, "Basic Realm=" + Realm);
+                this.Respond401(app, "Basic Realm=" + this.Realm);
+
                 return false;
             }
+
             return true;
         }
     }
-
 }

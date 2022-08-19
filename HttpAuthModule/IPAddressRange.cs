@@ -1,10 +1,10 @@
-﻿using System;
-using System.Linq;
-using System.Net;
-using System.Net.Sockets;
-
-namespace HttpAuthModule
+﻿namespace HttpAuthModule
 {
+    using System;
+    using System.Linq;
+    using System.Net;
+    using System.Net.Sockets;
+
     /// <summary>
     /// Represents an IP address range.
     /// </summary>
@@ -35,32 +35,49 @@ namespace HttpAuthModule
         public IPAddressRange(string ipRangeString)
         {
             if (string.IsNullOrEmpty(ipRangeString))
+            {
                 throw new InvalidOperationException("IP Address is null or empty.");
+            }
 
             var vals = ipRangeString.Split('/');
+
             IPAddress ipAddr;
+
             if (!IPAddress.TryParse(vals[0], out ipAddr))
+            {
                 throw new InvalidOperationException(string.Format("IP Address({0}) is invalid format.", ipRangeString));
+            }
 
-            _addressFamily = ipAddr.AddressFamily;
-            if (_addressFamily != AddressFamily.InterNetwork && _addressFamily != AddressFamily.InterNetworkV6)
+            this._addressFamily = ipAddr.AddressFamily;
+
+            if (this._addressFamily != AddressFamily.InterNetwork && this._addressFamily != AddressFamily.InterNetworkV6)
+            {
                 throw new InvalidOperationException(string.Format("IP Address({0}) is not ip4 or ip6 address famiry.", ipRangeString));
+            }
 
-            var maxMaskRange = _addressFamily == AddressFamily.InterNetwork ? 32 : 128;
+            var maxMaskRange = this._addressFamily == AddressFamily.InterNetwork ? 32 : 128;
+
             int maskRange;
+
             if (vals.Length > 1)
             {
                 if (!int.TryParse(vals[1], out maskRange) || maskRange < 0 || maskRange > maxMaskRange)
+                {
                     throw new InvalidOperationException(string.Format("IP Address({0}) is invalid range.", ipRangeString));
+                }
             }
             else
+            {
                 maskRange = maxMaskRange;
+            }
 
-            _networkAddressBytes = ipAddr.GetAddressBytes();
-            _subnetMaskBytes = Enumerable.Repeat<byte>(0xFF, _networkAddressBytes.Length).ToArray();
+            this._networkAddressBytes = ipAddr.GetAddressBytes();
+            this._subnetMaskBytes = Enumerable.Repeat<byte>(0xFF, this._networkAddressBytes.Length).ToArray();
 
             for (int i = 0; i < (maxMaskRange - maskRange); i++)
-                _subnetMaskBytes[_subnetMaskBytes.Length - 1 - i / 8] -= (byte)(1 << (i % 8));
+            {
+                this._subnetMaskBytes[this._subnetMaskBytes.Length - 1 - i / 8] -= (byte)(1 << (i % 8));
+            }
         }
 
         /// <summary>
@@ -75,13 +92,19 @@ namespace HttpAuthModule
         /// </returns>
         public bool IsInRange(IPAddress ipAddr)
         {
-            if (ipAddr.AddressFamily != _addressFamily)
+            if (ipAddr.AddressFamily != this._addressFamily)
+            {
                 return false;
+            }
 
             var addrBytes = ipAddr.GetAddressBytes();
             for (int i = 0; i < addrBytes.Length; i++)
-                if ((addrBytes[i] & _subnetMaskBytes[i]) != _networkAddressBytes[i])
+            {
+                if ((addrBytes[i] & this._subnetMaskBytes[i]) != this._networkAddressBytes[i])
+                {
                     return false;
+                }
+            }
 
             return true;
         }
@@ -99,9 +122,13 @@ namespace HttpAuthModule
         public bool IsInRange(string ipAddrString)
         {
             IPAddress ipAddr;
+
             if (!IPAddress.TryParse(ipAddrString, out ipAddr))
+            {
                 return false;
-            return IsInRange(ipAddr);
+            }
+
+            return this.IsInRange(ipAddr);
         }
     }
 }

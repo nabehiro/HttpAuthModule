@@ -1,5 +1,4 @@
-﻿
-namespace HttpAuthModule
+﻿namespace HttpAuthModule
 {
     /// <summary>
     /// Represents a credentials.

@@ -1,8 +1,7 @@
-﻿using System.Web;
-
-namespace HttpAuthModule
+﻿namespace HttpAuthModule
 {
- 
+    using System.Web;
+
     /// <summary>
     /// Defines the authentication strategy interface.
     /// </summary>
